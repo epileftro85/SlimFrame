@@ -1,0 +1,9 @@
+{
+  "name": "andru/seoanchor",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "."
+    }
+  }
+}
