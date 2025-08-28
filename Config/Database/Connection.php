@@ -6,8 +6,8 @@ final class Connection
     public static function db(): array
     {
         return [
-            'driver'  => getenv('DB_DRIVER') ?: 'mysql',       // mysql | pgsql | sqlite
-            'host'    => getenv('DB_HOST') ?: 'mysql',
+            'driver'  => getenv('DB_DRIVER') ?: 'mysql', // mysql | pgsql | sqlite
+            'host'    => getenv('DB_HOST') ?: 'localhost',
             'port'    => getenv('DB_PORT') ?: '3306',
             'name'    => getenv('DB_NAME') ?: 'seoanchor',
             'user'    => getenv('DB_USER') ?: 'seoanchor',

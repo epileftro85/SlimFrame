@@ -20,7 +20,7 @@ services:
 
   php:
     build:
-      context: ./web/docker/php
+      context: ./docker/php
     restart: always
     environment:
       DB_DRIVER: mysql
@@ -31,7 +31,7 @@ services:
       DB_PASSWORD: seoanchor
       DB_CHARSET: utf8mb4
     volumes:
-      - ./web:/var/www/html
+      - ./.:/var/www/html
 
   nginx:
     image: nginx:alpine
@@ -39,7 +39,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./web:/var/www/html:ro
+      - ./.:/var/www/html:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     depends_on:
       - php
