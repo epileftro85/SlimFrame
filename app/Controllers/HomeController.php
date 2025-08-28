@@ -8,10 +8,10 @@ class HomeController extends Controller
 	public function home()
 	{
         $this->redirectIfAuthenticated();
-        $child_view = __DIR__ . '/../views/home.php';
+        $child_view = ROOT_PATH . 'app/Views/home.php';
         $title = "Home - Wellcome";
         $csrf = $this->set_csrf();
-        $javascript = ['/views/js/login.js'];
-        include __DIR__ . '/../views/layout.php';
+        $javascript = ['/Views/js/login.js'];
+        include ROOT_PATH . 'app/Views/layout.php';
 	}
 }

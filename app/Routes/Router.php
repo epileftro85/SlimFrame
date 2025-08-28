@@ -103,7 +103,7 @@ function dispatch(): void {
                 return;
             }
             
-            $file = __DIR__ . '/' . ltrim($handler, '/');
+            $file = ROOT_PATH . 'app/Routes/' . ltrim($handler, '/');
             if (substr($file, -4) !== '.php') { $file .= '.php'; }
             if (!is_file($file)) { http_response_code(500); echo "File not found: $file"; return; }
             include_once $file;

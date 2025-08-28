@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/vendor/autoload.php';
+// Define the root directory constant
+define('ROOT_PATH', __DIR__ . '/');
+
+require ROOT_PATH . 'vendor/autoload.php';
 
 use App\Config\Database\Database;
 
@@ -13,7 +16,7 @@ function out(string $s): void
     echo $s . PHP_EOL;
 }
 
-$migrationsDir = __DIR__ . '/migrations';
+$migrationsDir = ROOT_PATH . 'migrations';
 if (!is_dir($migrationsDir)) {
     out("Migrations directory not found: {$migrationsDir}");
     exit(1);

@@ -12,8 +12,6 @@ class AuthController extends Controller
         $data = [
             'name'       => $_POST['name'] ?? '',
             'last_name'  => $_POST['lastname'] ?? '',
-            'company'    => $_POST['company'] ?? '',
-            'website'    => $_POST['website'] ?? '',
             'email'      => $_POST['email'] ?? '',
             'password'   => $_POST['password'] ?? '',
         ];

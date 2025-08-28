@@ -11,12 +11,12 @@ Lightweight PHP project scaffold with a minimal router, controllers, and a simpl
 This project is intentionally simple: a fast PHP starting point you can understand, modify, and deploy without a large framework or many runtime dependencies.
 
 ## Quick overview
-- Docker Compose for local development: `docker-compose.yml` (services: `mysql`, `php`, `nginx`)
+- Docker Compose for local development: `docker compose.yml` (services: `mysql`, `php`, `nginx`)
 - Migrations directory: `migrations/`
 - Migration runner: `migrate.php` (CLI)
 
 ## Requirements
-- Docker & docker-compose (recommended for local development)
+- Docker & docker compose (recommended for local development)
 - PHP CLI (optional if you run migrator on host)
 - Composer dependencies are expected under `vendor/` in this repo (already present).
 
@@ -25,19 +25,19 @@ This project is intentionally simple: a fast PHP starting point you can understa
 1. Start containers:
 
 ```
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 2. Run the migration runner from the `php` container (recommended because the service name `mysql` resolves on the Docker network):
 
 ```
-docker-compose run --rm php php /var/www/html/migrate.php
+docker compose run --rm php php /var/www/html/migrate.php
 ```
 
 3. Verify tables exist (run in the mysql container):
 
 ```
-docker-compose exec mysql mysql -u seoanchor -pseoanchor -e "USE seoanchor; SHOW TABLES;"
+docker compose exec mysql mysql -u seoanchor -pseoanchor -e "USE seoanchor; SHOW TABLES;"
 ```
 
 4. Install composer and generate classes autoloading
@@ -45,7 +45,7 @@ docker-compose exec mysql mysql -u seoanchor -pseoanchor -e "USE seoanchor; SHOW
 composer install && composer dump-autoload -o
 ```
 
-5. Open the app in a browser at `http://localhost` (nginx is mapped to port 80 in `docker-compose.yml`).
+5. Open the app in a browser at `http://localhost` (nginx is mapped to port 80 in `docker compose.yml`).
 
 ## Migrations
 
@@ -74,7 +74,7 @@ Database configuration is centralized under `Config/Database/Connection.php` and
 
 - `Database::pdo()` builds a PDO connection for `mysql`, `pgsql`, or `sqlite` using the config and sets safe PDO options (exceptions, default fetch mode, no emulated prepares). It also exposes helper methods: `begin()`, `commit()`, `rollBack()`, `driver()`, and `quoteIdent()`.
 
-If you need to override settings for local development, export environment variables or set them in your Docker `environment` stanza (already done for the `php` service in `docker-compose.yml`).
+If you need to override settings for local development, export environment variables or set them in your Docker `environment` stanza (already done for the `php` service in `docker compose.yml`).
 
 ## How to add a migration
 
@@ -128,7 +128,7 @@ get('/dashboard', 'DashController@index', ['auth']);
   - Cause: the web app is connected to a database that lacks the expected table (for example, `users` was not created). Solution: run the migrator in the environment the web app uses (see commands above) and verify `SHOW TABLES;` in the target DB.
 
 ```
-docker-compose run --rm php php /var/www/html/migrate.php
+docker compose run --rm php php /var/www/html/migrate.php
 ```
 ---
 Generated on: 2025-08-28

@@ -6,7 +6,7 @@ use App\Models\Model;
 class User extends Model
 {
 	protected static string $table = 'users';
-	protected static array $fillable = ['name', 'last_name', 'website', 'email', 'password'];
+	protected static array $fillable = ['name', 'last_name', 'email', 'password'];
 	protected static bool $timestamps = true;
 
 	public static function createSecure(array $data): self
