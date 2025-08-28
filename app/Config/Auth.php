@@ -3,12 +3,13 @@ namespace App\Config;
 
 use App\Models\User;
 use App\Models\UserSession;
+use App\Utils\EnvUtil;
 
 final class Auth
 {
     private static function secret(): string
     {
-        return getenv('APP_KEY') ?: 'dev-only-change-me';
+        return EnvUtil::get('APP_KEY', 'dev-only-change-me');
     }
 
     public static function login(int $userId, bool $remember = false): void

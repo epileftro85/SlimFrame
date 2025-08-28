@@ -88,6 +88,86 @@ If you need to override settings for local development, export environment varia
 - Route definitions live in `Routes/WebRoutes.php` and are initialized from `Routes/init.php`.
 - Controllers are in `Controllers/` and generally return rendered views from `views/`.
 
+## View System
+
+The view system has been enhanced with a lightweight template engine that provides better organization, security, and maintainability while keeping the framework simple.
+
+### Key Features
+- **Template Engine**: Custom lightweight template system with layout support
+- **Security**: Automatic HTML escaping and XSS protection
+- **Helper Functions**: Built-in utilities for common tasks (URLs, assets, formatting)
+- **Layout System**: Reusable layouts with sections and inheritance
+- **Flash Messages**: Professional component-based messaging system
+
+### Usage
+```php
+// In your controller
+use App\Utils\View;
+
+class ExampleController extends Controller
+{
+    public function index()
+    {
+        View::make()
+            ->with(['title' => 'My Page', 'users' => $users])
+            ->display('users/index', 'layout');
+    }
+}
+```
+
+For detailed documentation including all available features, helper functions, and examples, see [VIEW_SYSTEM.md](VIEW_SYSTEM.md).
+
+## Request Validation
+
+The framework includes a robust request validation system that provides secure input validation and sanitization.
+
+### Key Features
+- **Base Request Class**: `App\Requests\Request` provides the foundation for all validations
+- **Rule-Based Validation**: Define validation rules for each field
+- **Automatic Sanitization**: Input cleaning and type conversion
+- **Error Handling**: Comprehensive error messages and validation feedback
+- **Security**: Protection against common web vulnerabilities
+
+### Available Request Classes
+- **RegisterRequest**: Handles user registration validation
+- **LoginRequest**: Manages login form validation
+- **Custom Requests**: Extend the base Request class for your specific needs
+
+### Usage Example
+```php
+// In your controller
+use App\Requests\RegisterRequest;
+
+class AuthController extends Controller
+{
+    public function register()
+    {
+        $request = new RegisterRequest();
+        
+        if (!$request->validate($_POST)) {
+            // Handle validation errors
+            $errors = $request->getErrors();
+            return View::make()
+                ->with(['errors' => $errors])
+                ->display('auth/register', 'layout');
+        }
+        
+        // Process valid data
+        $data = $request->getValidatedData();
+        // ... registration logic
+    }
+}
+```
+
+### Validation Rules
+- `required`: Field must be present and not empty
+- `email`: Must be a valid email format
+- `min:X`: Minimum length for strings, minimum value for numbers
+- `max:X`: Maximum length for strings, maximum value for numbers
+- `string`: Must be a valid string
+- `numeric`: Must be a valid number
+- `confirmed`: Must match a confirmation field (e.g., password_confirmation)
+
 ## Middleware
 
 - Middleware lives under `Middlewares/` and the base helper is `Middlewares/Middleware.php`.

@@ -2,16 +2,20 @@
 namespace App\Controllers;
 
 use App\Controllers\Controller;
+use App\Utils\View;
 
 class HomeController extends Controller
 {
 	public function home()
 	{
         $this->redirectIfAuthenticated();
-        $child_view = ROOT_PATH . 'app/Views/home.php';
-        $title = "Home - Wellcome";
-        $csrf = $this->set_csrf();
-        $javascript = ['/Views/js/login.js'];
-        include ROOT_PATH . 'app/Views/layout.php';
+
+        View::make()
+            ->with([
+                'title' => 'Home - Welcome',
+                'csrf' => $this->set_csrf(),
+                'javascript' => ['/js/login.js']
+            ])
+            ->display('home', 'layout');
 	}
 }

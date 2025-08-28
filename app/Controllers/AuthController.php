@@ -4,31 +4,51 @@ namespace App\Controllers;
 use App\Controllers\Controller;
 use App\Models\User;
 use App\Config\Auth;
+use App\Requests\RegisterRequest;
+use App\Requests\LoginRequest;
+use App\Utils\Response;
 
 class AuthController extends Controller
 {
 	public function register(): void
     {
-        $data = [
-            'name'       => $_POST['name'] ?? '',
-            'last_name'  => $_POST['lastname'] ?? '',
-            'email'      => $_POST['email'] ?? '',
-            'password'   => $_POST['password'] ?? '',
-        ];
+        $request = new RegisterRequest();
 
-		if (!$this->verify_csrf($_POST['csrf_token'] ?? '')) {
-			http_response_code(403);
-			echo 'CSRF token validation failed';
-			return;
-		}
+        // Validate the request
+        if (!$request->validate()) {
+            if (Response::wantsJson()) {
+                Response::validationErrors($request->errors(), 'Registration validation failed');
+            } else {
+                Response::htmlError('Please correct the following errors:', 400, $request->errors());
+            }
+            return;
+        }
+
+        // Verify CSRF token
+        if (!$this->verify_csrf($request->input('csrf_token'))) {
+            if (Response::wantsJson()) {
+                Response::error('Security token validation failed', [], 403);
+            } else {
+                Response::htmlError('Security token validation failed', 403);
+            }
+            return;
+        }
 
         try {
-            $user = User::createSecure($data);
+            $user = User::createSecure($request->getRegistrationData());
             Auth::login((int)$user->id, false);
-            header('Location: /dashboard');
+
+            if (Response::wantsJson()) {
+                Response::success('Registration successful', ['redirect' => '/dashboard']);
+            } else {
+                Response::redirect('/dashboard', 'Registration successful! Welcome to your dashboard.');
+            }
         } catch (\Throwable $e) {
-            http_response_code(400);
-            echo 'Registration error: ' . $e->getMessage();
+            if (Response::wantsJson()) {
+                Response::error('Registration failed: ' . $e->getMessage(), [], 400);
+            } else {
+                Response::htmlError('Registration failed: ' . $e->getMessage(), 400);
+            }
         }
     }
 
@@ -36,26 +56,47 @@ class AuthController extends Controller
     {
         $this->redirectIfAuthenticated();
 
-        $email = $_POST['email'] ?? '';
-        $pass  = $_POST['password'] ?? '';
-        $remember = isset($_POST['remember']) && $_POST['remember'] === 'on';
+        $request = new LoginRequest();
 
-		if (!$this->verify_csrf($_POST['csrf_token'] ?? '')) {
-			http_response_code(403);
-			echo 'CSRF token validation failed';
-			return;
-		}
-
-        $users = User::where(['email' => $email], limit: 1);
-        $user = $users[0] ?? null;
-
-        if (!$user || !$user->verifyPassword($pass)) {
-            http_response_code(401);
-            echo 'Invalid credentials';
+        // Validate the request
+        if (!$request->validate()) {
+            if (Response::wantsJson()) {
+                Response::validationErrors($request->errors(), 'Login validation failed');
+            } else {
+                Response::htmlError('Please correct the following errors:', 400, $request->errors());
+            }
             return;
         }
 
-        Auth::login((int)$user->id, $remember);
-        header('Location: /dashboard');
+        // Verify CSRF token
+        if (!$this->verify_csrf($request->input('csrf_token'))) {
+            if (Response::wantsJson()) {
+                Response::error('Security token validation failed', [], 403);
+            } else {
+                Response::htmlError('Security token validation failed', 403);
+            }
+            return;
+        }
+
+        $credentials = $request->getCredentials();
+        $users = User::where(['email' => $credentials['email']], limit: 1);
+        $user = $users[0] ?? null;
+
+        if (!$user || !$user->verifyPassword($credentials['password'])) {
+            if (Response::wantsJson()) {
+                Response::error('Invalid email or password', [], 401);
+            } else {
+                Response::htmlError('Invalid email or password', 401);
+            }
+            return;
+        }
+
+        Auth::login((int)$user->id, $credentials['remember']);
+
+        if (Response::wantsJson()) {
+            Response::success('Login successful', ['redirect' => '/dashboard']);
+        } else {
+            Response::redirect('/dashboard', 'Login successful! Welcome back.');
+        }
     }
 }

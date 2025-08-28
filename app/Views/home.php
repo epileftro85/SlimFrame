@@ -13,24 +13,11 @@
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                 </div>
                 <div>
-                    <label for="lastname" class="block text-sm font-medium text-gray-700">Last name</label>
-                    <input id="lastname" name="lastname" type="text" autocomplete="family-name"
+                    <label for="last_name" class="block text-sm font-medium text-gray-700">Last name</label>
+                    <input id="last_name" name="last_name" type="text" autocomplete="family-name"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
                 </div>
             </div>
-
-            <div id="row-company" class="hidden">
-                <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
-                <input id="company" name="company" type="text" autocomplete="organization"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
-            </div>
-
-            <div id="row-website" class="hidden">
-                <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
-                <input id="website" name="website" type="url" placeholder="https://example.com"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
-            </div>
-
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                 <input id="email" name="email" type="email" autocomplete="email" required
